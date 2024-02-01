@@ -10,15 +10,15 @@ import (
 
 func TestTransferTx(t *testing.T) {
 	testStore := NewStore(testDB)
-	account1, _, _ := createTestAccount()
-	account2, _, _ := createTestAccount()
+	account1, _, _ := createTestAccount(t)
+	account2, _, _ := createTestAccount(t)
 
 	n := 1
 	amount := int64(10)
 
 	errs := make(chan error)
 	results := make(chan TransferTxResult)
-	fmt.Println("===========acc bal bef==========", account1.Balance, account2.Balance)
+	// fmt.Println("===========acc bal bef==========", account1.Balance, account2.Balance)
 
 	for i := 0; i < n; i++ {
 		txName := fmt.Sprintf("tx: %d", i+1)
@@ -80,7 +80,7 @@ func TestTransferTx(t *testing.T) {
 		toAccount := res.ToAccount
 		require.NotEmpty(t, toAccount)
 		require.Equal(t, toAccount.ID, account2.ID)
-		fmt.Println("===========acc bal tx==========", fromAccount.Balance, toAccount.Balance)
+		// fmt.Println("===========acc bal tx==========", fromAccount.Balance, toAccount.Balance)
 
 		// check balance
 		diff1 := account1.Balance - fromAccount.Balance
@@ -99,7 +99,7 @@ func TestTransferTx(t *testing.T) {
 	updatedAccount2, err := testStore.GetAccount(context.Background(), account2.ID)
 	require.NoError(t, err)
 
-	fmt.Println("===========acc bal fin==========", updatedAccount1.Balance, updatedAccount2.Balance)
+	// fmt.Println("===========acc bal fin==========", updatedAccount1.Balance, updatedAccount2.Balance)
 
 	require.Equal(t, updatedAccount1.Balance, account1.Balance-(int64(n)*amount))
 	require.Equal(t, updatedAccount2.Balance, account2.Balance+(int64(n)*amount))
